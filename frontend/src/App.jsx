@@ -1,24 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import Sports from './pages/Sports';
-import About from './pages/About';
 import './App.css';
 
 function App() {
   return (
-    <Router>
-      <div className="app">
-        <Navbar />
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/sports" element={<Sports />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <div className="app">
+      <h1>Welcome to Sports App</h1>
+      <main className="main-content">
+        <div className="welcome-box">
+          <h2>🏀 Sports Management System</h2>
+          <p>Your one-stop solution for managing sports activities</p>
+        </div>
+      </main>
+    </div>
   );
 }
 
