@@ -79,7 +79,7 @@ node seedSuperAdmin.js
 ## Common Commands
 - **Backend**
   - `npm run dev` — start Express server with nodemon
-  - `node seedSuperAdmin.js` — create a super admin user
+  
 - **Frontend**
   - `npm run dev` — start Vite dev server
 
