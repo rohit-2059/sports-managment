@@ -82,7 +82,7 @@ const getTeams = async (req, res, next) => {
     const teams = await Team.find(query)
       .populate("coachId", "name email phone")
       .populate("captainId", "name email")
-      .populate("players.playerId", "name email position jerseyNumber")
+      .populate("players.playerId", "name email phone position jerseyNumber")
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .sort({ createdAt: -1 });
@@ -115,7 +115,7 @@ const getTeam = async (req, res, next) => {
       .populate("captainId", "name email position")
       .populate(
         "players.playerId",
-        "name email position jerseyNumber dateOfBirth height weight"
+        "name email phone position jerseyNumber dateOfBirth height weight"
       );
 
     if (!team) {
@@ -336,7 +336,7 @@ const addPlayer = async (req, res, next) => {
 
     const updatedTeam = await Team.findById(req.params.id).populate(
       "players.playerId",
-      "name email"
+      "name email phone"
     );
 
     res.status(200).json({
@@ -386,6 +386,68 @@ const removePlayer = async (req, res, next) => {
       data: {
         message: "Player removed from team successfully",
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update player details in team
+// @route   PUT /api/teams/:id/players/:playerId
+// @access  Private (coach of the team)
+const updatePlayer = async (req, res, next) => {
+  try {
+    const { id: teamId, playerId } = req.params;
+    const { position, jerseyNumber, phone } = req.body;
+
+    const team = await Team.findById(teamId);
+
+    if (!team) {
+      return res.status(404).json({
+        success: false,
+        error: "Team not found",
+      });
+    }
+
+    // Check if user is the coach of this team
+    if (team.coachId.toString() !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        error: "Not authorized to update players in this team",
+      });
+    }
+
+    // Find the player in the team
+    const playerIndex = team.players.findIndex(
+      (p) => p.playerId && p.playerId.toString() === playerId
+    );
+
+    if (playerIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: "Player not found in this team",
+      });
+    }
+
+    // Update player details in team
+    if (position) team.players[playerIndex].position = position;
+    if (jerseyNumber) team.players[playerIndex].jerseyNumber = jerseyNumber;
+
+    await team.save();
+
+    // Update phone in User model if player is registered
+    if (phone && team.players[playerIndex].playerId) {
+      await User.findByIdAndUpdate(playerId, { phone });
+    }
+
+    const updatedTeam = await Team.findById(teamId).populate(
+      "players.playerId",
+      "name email phone"
+    );
+
+    res.status(200).json({
+      success: true,
+      data: updatedTeam,
     });
   } catch (error) {
     next(error);
@@ -455,6 +517,12 @@ router.put(
   updateTeamApproval
 );
 router.post("/:id/players", protect, authorize("coach"), addPlayer);
+router.put(
+  "/:id/players/:playerId",
+  protect,
+  authorize("coach"),
+  updatePlayer
+);
 router.delete(
   "/:id/players/:playerId",
   protect,

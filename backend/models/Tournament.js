@@ -17,12 +17,14 @@ const tournamentSchema = new mongoose.Schema(
       type: String,
       required: [true, "Sport type is required"],
       enum: [
-        "football",
-        "basketball",
-        "cricket",
-        "tennis",
-        "volleyball",
-        "other",
+        "Football",
+        "Basketball",
+        "Cricket",
+        "Tennis",
+        "Volleyball",
+        "Hockey",
+        "Badminton",
+        "Other",
       ],
     },
     startDate: {
@@ -139,7 +141,9 @@ tournamentSchema.pre("save", async function () {
 
   // Validate that registrationDeadline is before or equal to startDate
   if (this.registrationDeadline > this.startDate) {
-    throw new Error("Registration deadline must be before or equal to start date");
+    throw new Error(
+      "Registration deadline must be before or equal to start date"
+    );
   }
 });
 

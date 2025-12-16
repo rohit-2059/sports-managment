@@ -184,6 +184,7 @@ const updateProfile = async (req, res, next) => {
   try {
     const allowedFields = [
       "name",
+      "email",
       "phone",
       "profileImage",
       "jerseyNumber",
@@ -201,6 +202,21 @@ const updateProfile = async (req, res, next) => {
       }
     });
 
+    // If email is being updated, check for uniqueness
+    if (updateObj.email) {
+      const existingUser = await User.findOne({ 
+        email: updateObj.email,
+        _id: { $ne: req.user.id } // Exclude current user
+      });
+      
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          error: "Email already in use by another user",
+        });
+      }
+    }
+
     const user = await User.findByIdAndUpdate(req.user.id, updateObj, {
       new: true,
       runValidators: true,
@@ -216,6 +232,61 @@ const updateProfile = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Change user password
+// @route   PUT /api/auth/change-password
+// @access  Private
+const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    // Validation
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        error: "Please provide current password, new password, and confirm password",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        error: "New password and confirm password do not match",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        error: "Password must be at least 6 characters",
+      });
+    }
+
+    // Get user with password
+    const user = await User.findById(req.user.id).select("+password");
+
+    // Verify current password
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        error: "Current password is incorrect",
+      });
+    }
+
+    // Update password
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password updated successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 // @desc    Get all users (admin only)
 // @route   GET /api/auth/users
@@ -260,6 +331,7 @@ router.post("/register", register);
 router.post("/login", login);
 router.get("/me", protect, getMe);
 router.put("/profile", protect, updateProfile);
+router.put("/change-password", protect, changePassword);
 router.get("/users", protect, authorize("super_admin"), getAllUsers);
 router.get(
   "/players",

@@ -51,6 +51,18 @@ const matchSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    // Sport-specific score details
+    scoreDetails: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
+      // Cricket: { homeTeam: { runs, wickets, overs, extras }, awayTeam: { ... } }
+      // Football: { homeTeam: { goals }, awayTeam: { goals } }
+      // Basketball: { homeTeam: { points }, awayTeam: { points } }
+    },
+    sport: {
+      type: String,
+      enum: ['Football', 'Basketball', 'Cricket', 'Tennis', 'Volleyball', 'Hockey', 'Badminton', 'Other'],
+    },
     result: {
       type: String,
       trim: true,
