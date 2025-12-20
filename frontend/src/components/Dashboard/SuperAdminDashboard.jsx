@@ -215,7 +215,6 @@ const SuperAdminDashboard = ({ user, onLogout }) => {
                         { id: 'teams', title: 'Teams', desc: 'Manage team registrations', icon: Icons.Teams, color: 'green' },
                         { id: 'users', title: 'Users', desc: 'Manage coaches and players', icon: Icons.Users, color: 'purple' },
                         { id: 'schedules', title: 'Schedules', desc: 'Plan match calendar', icon: Icons.Calendar, color: 'orange' },
-                        { id: 'stats', title: 'Statistics', desc: 'View platform analytics', icon: Icons.Stats, color: 'teal' },
                     ].map((feature, idx) => (
                         <div
                             key={feature.id}
@@ -545,7 +544,7 @@ const SuperAdminDashboard = ({ user, onLogout }) => {
         { id: 'schedules', label: 'Schedules', icon: Icons.Calendar },
         { id: 'teams', label: 'Teams', icon: Icons.Teams },
         { id: 'users', label: 'Users', icon: Icons.Users },
-        { id: 'stats', label: 'Statistics', icon: Icons.Stats },
+      
     ];
 
     return (

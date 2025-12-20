@@ -38,28 +38,7 @@ exports.addPlayerStats = async (req, res) => {
         statsData.footballStats = stats;
         break;
       case 'Cricket':
-        // Calculate derived metrics for cricket
-        const cricketStats = { ...stats };
-        
-        // Calculate Strike Rate: (runs / ballsFaced) * 100
-        if (cricketStats.ballsFaced && cricketStats.ballsFaced > 0) {
-          cricketStats.strikeRate = parseFloat(
-            ((cricketStats.runs || 0) / cricketStats.ballsFaced * 100).toFixed(2)
-          );
-        } else {
-          cricketStats.strikeRate = 0; // Will display as N/A in frontend
-        }
-        
-        // Calculate Bowling Average: runsConceded / wickets
-        if (cricketStats.wickets && cricketStats.wickets > 0) {
-          cricketStats.bowlingAverage = parseFloat(
-            ((cricketStats.runsConceded || 0) / cricketStats.wickets).toFixed(2)
-          );
-        } else {
-          cricketStats.bowlingAverage = 0; // Will display as N/A in frontend
-        }
-        
-        statsData.cricketStats = cricketStats;
+        statsData.cricketStats = stats;
         break;
       case 'Basketball':
         statsData.basketballStats = stats;
