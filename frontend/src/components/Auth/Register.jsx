@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { API_BASE_URL } from '../../config/api';
+import sportsLogo from '../../assets/sports.png';
 
 const Register = ({ onSuccess, onSwitchToLogin, onBackToLanding }) => {
   const [formData, setFormData] = useState({
@@ -29,13 +30,36 @@ const Register = ({ onSuccess, onSwitchToLogin, onBackToLanding }) => {
       return;
     }
 
+    // Email validation - must be valid format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+    // Password validation - minimum 8 characters, at least one uppercase, one lowercase, one number
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      return;
+    }
+
+    if (!/[A-Z]/.test(formData.password)) {
+      setError('Password must contain at least one uppercase letter');
+      return;
+    }
+
+    if (!/[a-z]/.test(formData.password)) {
+      setError('Password must contain at least one lowercase letter');
+      return;
+    }
+
+    if (!/[0-9]/.test(formData.password)) {
+      setError('Password must contain at least one number');
       return;
     }
 
@@ -76,31 +100,36 @@ const Register = ({ onSuccess, onSwitchToLogin, onBackToLanding }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Create your account
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Join our sports management platform
-        </p>
-      </div>
+    <div className="h-screen overflow-hidden bg-gradient-to-br from-gray-50 to-purple-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl w-full h-full flex flex-col lg:flex-row-reverse items-center gap-4 lg:gap-6 py-4">
+        {/* Right Side - Form */}
+        <div className="w-full lg:w-1/2 h-full flex flex-col justify-center">
+          <div className="max-w-md mx-auto w-full">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <img src={sportsLogo} alt="SportsPro" className="h-14 w-auto" />
+              <span className="text-2xl font-bold text-gray-900">SportsPro</span>
+            </div>
+            
+            <div className="bg-white py-6 px-6 shadow-2xl rounded-2xl border border-gray-100 sm:px-12">
+              <div className="mb-4 text-center">
+                <h2 className="text-xl font-extrabold text-gray-900 tracking-tight">
+                  Create your account!
+                </h2>
+              </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-3.5" onSubmit={handleSubmit}>
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
+              <div className="bg-red-50 border border-red-200 text-red-600 px-3 py-2 rounded-md text-xs">
                 {error}
               </div>
             )}
 
             {/* Name Field */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="name" className="block text-xs font-semibold text-gray-700 mb-0.5">
                 Full Name
               </label>
-              <div className="mt-1">
+              <div className="relative">
                 <input
                   id="name"
                   name="name"
@@ -108,18 +137,18 @@ const Register = ({ onSuccess, onSwitchToLogin, onBackToLanding }) => {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 bg-white focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                  placeholder="Enter your full name"
+                  className="appearance-none block w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg placeholder-gray-400 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                  placeholder="John Doe"
                 />
               </div>
             </div>
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-xs font-semibold text-gray-700 mb-0.5">
                 Email Address
               </label>
-              <div className="mt-1">
+              <div className="relative">
                 <input
                   id="email"
                   name="email"
@@ -128,19 +157,19 @@ const Register = ({ onSuccess, onSwitchToLogin, onBackToLanding }) => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 bg-white focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                  placeholder="Enter your email"
+                  className="appearance-none block w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg placeholder-gray-400 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                  placeholder="you@example.com"
                 />
               </div>
             </div>
 
             {/* Role Selection - This is the key part! */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-xs font-semibold text-gray-700 mb-0.5">
                 Register as
               </label>
-              <div className="mt-3 space-y-3">
-                <div className="flex items-center">
+              <div className="space-y-1.5">
+                <div className="relative flex items-center p-2 border-2 border-gray-200 rounded-lg hover:border-purple-500 transition-colors cursor-pointer">
                   <input
                     id="coach"
                     name="role"
@@ -148,17 +177,15 @@ const Register = ({ onSuccess, onSwitchToLogin, onBackToLanding }) => {
                     value="coach"
                     checked={formData.role === 'coach'}
                     onChange={handleChange}
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300"
+                    className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300"
                   />
-                  <label htmlFor="coach" className="ml-3 block text-sm text-gray-700">
-                    <span className="font-medium">Coach / Team Manager</span>
-                    <span className="block text-xs text-gray-500">
-                      Manage teams, players, and match strategies
-                    </span>
+                  <label htmlFor="coach" className="ml-3 block text-xs text-gray-700 cursor-pointer flex-1">
+                    <span className="font-semibold text-gray-900">Coach / Team Manager</span>
+                    <p className="text-xs text-gray-500 mt-0">Manage teams and organize matches</p>
                   </label>
                 </div>
                 
-                <div className="flex items-center">
+                <div className="relative flex items-center p-2 border-2 border-gray-200 rounded-lg hover:border-purple-500 transition-colors cursor-pointer">
                   <input
                     id="player"
                     name="role"
@@ -166,13 +193,11 @@ const Register = ({ onSuccess, onSwitchToLogin, onBackToLanding }) => {
                     value="player"
                     checked={formData.role === 'player'}
                     onChange={handleChange}
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300"
+                    className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300"
                   />
-                  <label htmlFor="player" className="ml-3 block text-sm text-gray-700">
-                    <span className="font-medium">Player</span>
-                    <span className="block text-xs text-gray-500">
-                      Track performance and join teams
-                    </span>
+                  <label htmlFor="player" className="ml-3 block text-xs text-gray-700 cursor-pointer flex-1">
+                    <span className="font-semibold text-gray-900">Player</span>
+                    <p className="text-xs text-gray-500 mt-0">Join teams and participate in tournaments</p>
                   </label>
                 </div>
               </div>
@@ -180,10 +205,10 @@ const Register = ({ onSuccess, onSwitchToLogin, onBackToLanding }) => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-xs font-semibold text-gray-700 mb-0.5">
                 Password
               </label>
-              <div className="mt-1">
+              <div className="relative">
                 <input
                   id="password"
                   name="password"
@@ -192,18 +217,21 @@ const Register = ({ onSuccess, onSwitchToLogin, onBackToLanding }) => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 bg-white focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                  placeholder="Create a password"
+                  className="appearance-none block w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg placeholder-gray-400 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                  placeholder="Create a strong password"
                 />
               </div>
+              <p className="mt-0.5 text-xs text-gray-500">
+                Must be at least 8 characters with uppercase, lowercase, and a number
+              </p>
             </div>
 
             {/* Confirm Password Field */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="confirmPassword" className="block text-xs font-semibold text-gray-700 mb-0.5">
                 Confirm Password
               </label>
-              <div className="mt-1">
+              <div className="relative">
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -212,18 +240,18 @@ const Register = ({ onSuccess, onSwitchToLogin, onBackToLanding }) => {
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 bg-white focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="appearance-none block w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg placeholder-gray-400 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                   placeholder="Confirm your password"
                 />
               </div>
             </div>
 
             {/* Submit Button */}
-            <div>
+            <div className="pt-0.5">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-lg text-xs font-semibold text-white bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-200 hover:scale-[1.02]"
               >
                 {loading ? 'Creating Account...' : 'Create Account'}
               </button>
@@ -231,21 +259,47 @@ const Register = ({ onSuccess, onSwitchToLogin, onBackToLanding }) => {
           </form>
 
           {/* Switch to Login */}
-          <div className="mt-6">
-            <div className="text-center space-y-2">
+          <div className="mt-2">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200"></div>
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="px-3 bg-white text-gray-500">Already have an account?</span>
+              </div>
+            </div>
+            <div className="mt-2 text-center space-y-1.5">
               <button
                 onClick={onSwitchToLogin}
-                className="text-primary-600 hover:text-primary-500 text-sm font-medium"
+                className="text-purple-600 hover:text-purple-700 text-xs font-semibold transition-colors"
               >
-                Already have an account? Sign in
+                Sign in instead
               </button>
               <br />
               <button
                 onClick={onBackToLanding}
-                className="text-gray-500 hover:text-gray-700 text-sm"
+                className="text-gray-500 hover:text-gray-700 text-xs font-medium transition-colors"
               >
                 ← Back to Home
               </button>
+            </div>
+          </div>
+          </div>
+        </div>
+        </div>
+
+        {/* Left Side - Image */}
+        <div className="hidden lg:flex w-full lg:w-1/2 items-center">
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl w-full h-full max-h-[90vh]">
+            <img 
+              src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=1200&auto=format&fit=crop" 
+              alt="Team Celebration" 
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/75 via-purple-900/50 to-transparent"></div>
+            <div className="absolute inset-0 flex flex-col justify-end p-12">
+              <h3 className="text-5xl font-bold text-white mb-5 leading-tight">Join the Winning Team</h3>
+              <p className="text-xl text-purple-100 leading-relaxed max-w-lg">Connect with coaches, track your progress, and become part of a thriving sports community.</p>
             </div>
           </div>
         </div>

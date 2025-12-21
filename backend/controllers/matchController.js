@@ -89,14 +89,23 @@ exports.getTournamentMatches = async (req, res) => {
     const matches = await Match.find({ tournamentId: id })
       .populate("homeTeam", "name shortName sport")
       .populate("awayTeam", "name shortName sport")
-      .populate("tournamentId", "name format")
+      .populate("tournamentId", "name format sport")
       .populate("winner", "name shortName")
       .sort({ matchNumber: 1 });
 
+    // Ensure all matches have sport field from tournament if not set
+    const matchesWithSport = matches.map(match => {
+      const matchObj = match.toObject();
+      if (!matchObj.sport && matchObj.tournamentId?.sport) {
+        matchObj.sport = matchObj.tournamentId.sport;
+      }
+      return matchObj;
+    });
+
     res.status(200).json({
       success: true,
-      count: matches.length,
-      data: matches,
+      count: matchesWithSport.length,
+      data: matchesWithSport,
     });
   } catch (err) {
     console.error("Error fetching matches:", err);
@@ -292,6 +301,14 @@ function validateSportScore(sport, scoreDetails) {
       return validateFootballScore(scoreDetails);
     case "Basketball":
       return validateBasketballScore(scoreDetails);
+    case "Tennis":
+      return validateTennisScore(scoreDetails);
+    case "Volleyball":
+      return validateVolleyballScore(scoreDetails);
+    case "Hockey":
+      return validateHockeyScore(scoreDetails);
+    case "Badminton":
+      return validateBadmintonScore(scoreDetails);
     default:
       return { valid: true };
   }
@@ -343,6 +360,62 @@ function validateBasketballScore(scoreDetails) {
   return { valid: true };
 }
 
+function validateTennisScore(scoreDetails) {
+  const { homeTeam, awayTeam } = scoreDetails;
+
+  if (homeTeam.sets === undefined || awayTeam.sets === undefined) {
+    return { valid: false, error: "Sets are required for tennis matches" };
+  }
+
+  if (homeTeam.sets < 0 || awayTeam.sets < 0) {
+    return { valid: false, error: "Sets cannot be negative" };
+  }
+
+  return { valid: true };
+}
+
+function validateVolleyballScore(scoreDetails) {
+  const { homeTeam, awayTeam } = scoreDetails;
+
+  if (homeTeam.sets === undefined || awayTeam.sets === undefined) {
+    return { valid: false, error: "Sets are required for volleyball matches" };
+  }
+
+  if (homeTeam.sets < 0 || awayTeam.sets < 0) {
+    return { valid: false, error: "Sets cannot be negative" };
+  }
+
+  return { valid: true };
+}
+
+function validateHockeyScore(scoreDetails) {
+  const { homeTeam, awayTeam } = scoreDetails;
+
+  if (homeTeam.goals === undefined || awayTeam.goals === undefined) {
+    return { valid: false, error: "Goals are required for hockey matches" };
+  }
+
+  if (homeTeam.goals < 0 || awayTeam.goals < 0) {
+    return { valid: false, error: "Goals cannot be negative" };
+  }
+
+  return { valid: true };
+}
+
+function validateBadmintonScore(scoreDetails) {
+  const { homeTeam, awayTeam } = scoreDetails;
+
+  if (homeTeam.games === undefined || awayTeam.games === undefined) {
+    return { valid: false, error: "Games are required for badminton matches" };
+  }
+
+  if (homeTeam.games < 0 || awayTeam.games < 0 || homeTeam.games > 3 || awayTeam.games > 3) {
+    return { valid: false, error: "Games must be between 0 and 3" };
+  }
+
+  return { valid: true };
+}
+
 function calculateSimpleScore(sport, scoreDetails) {
   const { homeTeam, awayTeam } = scoreDetails;
 
@@ -353,6 +426,7 @@ function calculateSimpleScore(sport, scoreDetails) {
         away: awayTeam.runs || 0,
       };
     case "Football":
+    case "Hockey":
       return {
         home: homeTeam.goals || 0,
         away: awayTeam.goals || 0,
@@ -362,8 +436,22 @@ function calculateSimpleScore(sport, scoreDetails) {
         home: homeTeam.points || 0,
         away: awayTeam.points || 0,
       };
+    case "Tennis":
+    case "Volleyball":
+      return {
+        home: homeTeam.sets || 0,
+        away: awayTeam.sets || 0,
+      };
+    case "Badminton":
+      return {
+        home: homeTeam.games || 0,
+        away: awayTeam.games || 0,
+      };
     default:
-      return { home: 0, away: 0 };
+      return {
+        home: homeTeam.score || 0,
+        away: awayTeam.score || 0,
+      };
   }
 }
 
@@ -403,6 +491,7 @@ function formatResult(sport, scoreDetails, match, winner) {
       return "Match Tied";
 
     case "Football":
+    case "Hockey":
       const homeGoals = homeTeam.goals || 0;
       const awayGoals = awayTeam.goals || 0;
       if (winner === "draw") return `Draw ${homeGoals}-${awayGoals}`;
@@ -418,8 +507,30 @@ function formatResult(sport, scoreDetails, match, winner) {
         ? `${match.homeTeam.name} won ${homePoints}-${awayPoints}`
         : `${match.awayTeam.name} won ${awayPoints}-${homePoints}`;
 
+    case "Tennis":
+    case "Volleyball":
+      const homeSets = homeTeam.sets || 0;
+      const awaySets = awayTeam.sets || 0;
+      if (winner === "draw") return `Draw ${homeSets}-${awaySets} sets`;
+      return winner === "home"
+        ? `${match.homeTeam.name} won ${homeSets}-${awaySets} sets`
+        : `${match.awayTeam.name} won ${awaySets}-${homeSets} sets`;
+
+    case "Badminton":
+      const homeGames = homeTeam.games || 0;
+      const awayGames = awayTeam.games || 0;
+      if (winner === "draw") return `Draw ${homeGames}-${awayGames} games`;
+      return winner === "home"
+        ? `${match.homeTeam.name} won ${homeGames}-${awayGames} games`
+        : `${match.awayTeam.name} won ${awayGames}-${homeGames} games`;
+
     default:
-      return "Result recorded";
+      const homeScore = homeTeam.score || 0;
+      const awayScore = awayTeam.score || 0;
+      if (winner === "draw") return `Draw ${homeScore}-${awayScore}`;
+      return winner === "home"
+        ? `${match.homeTeam.name} won ${homeScore}-${awayScore}`
+        : `${match.awayTeam.name} won ${awayScore}-${homeScore}`;
   }
 }
 
@@ -487,6 +598,7 @@ function generateKnockoutMatches(tournament) {
         homeTeam: teams[i]._id,
         awayTeam: teams[i + 1]._id,
         venue: tournament.venue,
+        sport: tournament.sport,
       });
     }
   }
@@ -516,6 +628,7 @@ function generateKnockoutMatches(tournament) {
         awayTeam: null, // TBD
         scheduledDate: new Date(currentRoundStart), // Tentative date for this round
         venue: tournament.venue,
+        sport: tournament.sport,
       });
     }
 
@@ -541,6 +654,7 @@ function generateRoundRobinMatches(tournament) {
         homeTeam: teams[i]._id,
         awayTeam: teams[j]._id,
         venue: tournament.venue,
+        sport: tournament.sport,
       });
     }
   }
@@ -573,3 +687,38 @@ function getRoundName(slots) {
       return `Round 1`;
   }
 }
+
+// Utility function to sync sport field from tournament to matches
+exports.syncMatchSports = async (req, res) => {
+  try {
+    const tournaments = await Tournament.find({}).select('_id sport');
+    let updatedCount = 0;
+
+    for (const tournament of tournaments) {
+      const result = await Match.updateMany(
+        { 
+          tournamentId: tournament._id,
+          $or: [
+            { sport: { $exists: false } },
+            { sport: null },
+            { sport: '' }
+          ]
+        },
+        { $set: { sport: tournament.sport } }
+      );
+      updatedCount += result.modifiedCount;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Updated ${updatedCount} matches with sport field`,
+      data: { updatedCount }
+    });
+  } catch (err) {
+    console.error("Error syncing match sports:", err);
+    res.status(500).json({
+      success: false,
+      error: "Server error while syncing match sports",
+    });
+  }
+};

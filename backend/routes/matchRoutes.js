@@ -7,6 +7,7 @@ const {
   getTeamMatches,
   updateMatch,
   updateMatchScore,
+  syncMatchSports,
 } = require("../controllers/matchController");
 
 // Generate schedule for a tournament (admin only)
@@ -28,5 +29,8 @@ router.put("/:id", protect, authorize("super_admin"), updateMatch);
 
 // Update match score
 router.put("/:id/score", protect, authorize("super_admin"), updateMatchScore);
+
+// Sync sport field from tournaments to matches (utility endpoint)
+router.post("/sync-sports", protect, authorize("super_admin"), syncMatchSports);
 
 module.exports = router;

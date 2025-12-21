@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { API_BASE_URL } from '../../config/api';
+import sportsLogo from '../../assets/sports.png';
 
 const Login = ({ onSuccess, onSwitchToRegister, onBackToLanding }) => {
   const [formData, setFormData] = useState({
@@ -60,19 +61,24 @@ const Login = ({ onSuccess, onSwitchToRegister, onBackToLanding }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Sign in to your account
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Welcome back to the sports platform
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl w-full flex flex-col lg:flex-row items-stretch gap-8 lg:gap-12">
+        {/* Left Side - Form */}
+        <div className="w-full lg:w-1/2 flex flex-col justify-center">
+          <div className="max-w-md mx-auto w-full">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <img src={sportsLogo} alt="SportsPro" className="h-16 w-auto" />
+              <span className="text-3xl font-bold text-gray-900">SportsPro</span>
+            </div>
+            
+            <div className="bg-white py-8 px-6 shadow-2xl rounded-2xl border border-gray-100 sm:px-12">
+              <div className="mb-6 text-center">
+                <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">
+                  Welcome Back!
+                </h2>
+              </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-5" onSubmit={handleSubmit}>
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
                 {error}
@@ -81,10 +87,10 @@ const Login = ({ onSuccess, onSwitchToRegister, onBackToLanding }) => {
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Email Address
               </label>
-              <div className="mt-1">
+              <div className="relative">
                 <input
                   id="email"
                   name="email"
@@ -93,18 +99,18 @@ const Login = ({ onSuccess, onSwitchToRegister, onBackToLanding }) => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 bg-white focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                  placeholder="Enter your email"
+                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl placeholder-gray-400 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  placeholder="you@example.com"
                 />
               </div>
             </div>
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Password
               </label>
-              <div className="mt-1">
+              <div className="relative">
                 <input
                   id="password"
                   name="password"
@@ -113,18 +119,18 @@ const Login = ({ onSuccess, onSwitchToRegister, onBackToLanding }) => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 text-gray-900 bg-white focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-xl placeholder-gray-400 text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   placeholder="Enter your password"
                 />
               </div>
             </div>
 
             {/* Submit Button */}
-            <div>
+            <div className="pt-1">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex justify-center py-3 px-6 border border-transparent rounded-xl shadow-lg text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-200 hover:scale-[1.02]"
               >
                 {loading ? 'Signing In...' : 'Sign In'}
               </button>
@@ -133,35 +139,51 @@ const Login = ({ onSuccess, onSwitchToRegister, onBackToLanding }) => {
 
           {/* Switch to Register */}
           <div className="mt-6">
-            <div className="text-center space-y-2">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500">New to SportsPro?</span>
+              </div>
+            </div>
+            <div className="mt-4 text-center space-y-2.5">
               <button
                 onClick={onSwitchToRegister}
-                className="text-primary-600 hover:text-primary-500 text-sm font-medium"
+                className="text-blue-600 hover:text-blue-700 text-sm font-semibold transition-colors"
               >
-                Don't have an account? Sign up
+                Create an account
               </button>
               <br />
               <button
                 onClick={onBackToLanding}
-                className="text-gray-500 hover:text-gray-700 text-sm"
+                className="text-gray-500 hover:text-gray-700 text-sm font-medium transition-colors"
               >
                 ← Back to Home
               </button>
             </div>
           </div>
+            </div>
+          </div>
+        </div>
 
-          {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-md">
-            <p className="text-xs text-gray-600 text-center">
-              <strong>Demo Super Admin:</strong><br />
-              Email: admin@sportsmanagement.com<br />
-              Password: admin123
-            </p>
+        {/* Right Side - Image */}
+        <div className="hidden lg:flex w-full lg:w-1/2 items-center">
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl w-full h-[700px]">
+            <img 
+              src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1200&auto=format&fit=crop" 
+              alt="Sports Stadium" 
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/75 via-blue-900/50 to-transparent"></div>
+            <div className="absolute inset-0 flex flex-col justify-end p-12">
+              <h3 className="text-5xl font-bold text-white mb-5 leading-tight">Manage Your Sports Journey</h3>
+              <p className="text-xl text-blue-100 leading-relaxed max-w-lg">Track performance, organize tournaments, and lead your team to victory with SportsPro's comprehensive platform.</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
 export default Login;

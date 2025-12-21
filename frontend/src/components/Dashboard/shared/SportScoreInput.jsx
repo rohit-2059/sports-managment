@@ -95,6 +95,125 @@ const SportScoreInput = ({ sport, homeTeam, awayTeam, onSave, onCancel }) => {
         </div>
     );
 
+    const renderTennisInput = (team, score, setScore, label) => (
+        <div className="space-y-3">
+            <h4 className="font-semibold text-slate-800">{label}</h4>
+            <div className="grid grid-cols-2 gap-3">
+                <div>
+                    <label className="text-xs text-slate-500 font-medium">Sets Won *</label>
+                    <input
+                        type="number"
+                        min="0"
+                        max="5"
+                        value={score.sets || ''}
+                        onChange={(e) => setScore({ ...score, sets: parseInt(e.target.value) || 0 })}
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center font-bold text-lg"
+                        placeholder="0"
+                    />
+                </div>
+                <div>
+                    <label className="text-xs text-slate-500 font-medium">Games Won</label>
+                    <input
+                        type="number"
+                        min="0"
+                        value={score.games || ''}
+                        onChange={(e) => setScore({ ...score, games: parseInt(e.target.value) || 0 })}
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center font-semibold"
+                        placeholder="0"
+                    />
+                </div>
+            </div>
+            <div className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-2 rounded-lg">
+                Score: {score.sets || 0} Sets, {score.games || 0} Games
+            </div>
+        </div>
+    );
+
+    const renderVolleyballInput = (team, score, setScore, label) => (
+        <div className="space-y-3">
+            <h4 className="font-semibold text-slate-800">{label}</h4>
+            <div className="grid grid-cols-2 gap-3">
+                <div>
+                    <label className="text-xs text-slate-500 font-medium">Sets Won *</label>
+                    <input
+                        type="number"
+                        min="0"
+                        max="5"
+                        value={score.sets || ''}
+                        onChange={(e) => setScore({ ...score, sets: parseInt(e.target.value) || 0 })}
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center font-bold text-lg"
+                        placeholder="0"
+                    />
+                </div>
+                <div>
+                    <label className="text-xs text-slate-500 font-medium">Total Points</label>
+                    <input
+                        type="number"
+                        min="0"
+                        value={score.points || ''}
+                        onChange={(e) => setScore({ ...score, points: parseInt(e.target.value) || 0 })}
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center font-semibold"
+                        placeholder="0"
+                    />
+                </div>
+            </div>
+            <div className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-2 rounded-lg">
+                Score: {score.sets || 0} Sets, {score.points || 0} Points
+            </div>
+        </div>
+    );
+
+    const renderHockeyInput = (team, score, setScore, label) => (
+        <div className="space-y-2">
+            <h4 className="font-semibold text-slate-800">{label}</h4>
+            <div>
+                <label className="text-xs text-slate-500 font-medium">Goals *</label>
+                <input
+                    type="number"
+                    min="0"
+                    value={score.goals || ''}
+                    onChange={(e) => setScore({ goals: parseInt(e.target.value) || 0 })}
+                    className="w-full px-4 py-3 border border-slate-300 rounded-lg text-3xl font-bold text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="0"
+                />
+            </div>
+        </div>
+    );
+
+    const renderBadmintonInput = (team, score, setScore, label) => (
+        <div className="space-y-3">
+            <h4 className="font-semibold text-slate-800">{label}</h4>
+            <div className="grid grid-cols-2 gap-3">
+                <div>
+                    <label className="text-xs text-slate-500 font-medium">Games Won *</label>
+                    <input
+                        type="number"
+                        min="0"
+                        max="3"
+                        value={score.games || ''}
+                        onChange={(e) => setScore({ ...score, games: parseInt(e.target.value) || 0 })}
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center font-bold text-lg"
+                        placeholder="0"
+                    />
+                </div>
+                <div>
+                    <label className="text-xs text-slate-500 font-medium">Total Points</label>
+                    <input
+                        type="number"
+                        min="0"
+                        value={score.points || ''}
+                        onChange={(e) => setScore({ ...score, points: parseInt(e.target.value) || 0 })}
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center font-semibold"
+                        placeholder="0"
+                    />
+                </div>
+            </div>
+            <div className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-2 rounded-lg">
+                Score: {score.games || 0} Games, {score.points || 0} Points
+            </div>
+        </div>
+    );
+
     const renderGenericInput = (team, score, setScore, label) => (
         <div className="space-y-2">
             <h4 className="font-semibold text-slate-800">{label}</h4>
@@ -120,6 +239,14 @@ const SportScoreInput = ({ sport, homeTeam, awayTeam, onSave, onCancel }) => {
                 return renderFootballInput(team, score, setScore, label);
             case 'Basketball':
                 return renderBasketballInput(team, score, setScore, label);
+            case 'Tennis':
+                return renderTennisInput(team, score, setScore, label);
+            case 'Volleyball':
+                return renderVolleyballInput(team, score, setScore, label);
+            case 'Hockey':
+                return renderHockeyInput(team, score, setScore, label);
+            case 'Badminton':
+                return renderBadmintonInput(team, score, setScore, label);
             default:
                 return renderGenericInput(team, score, setScore, label);
         }
@@ -135,12 +262,6 @@ const SportScoreInput = ({ sport, homeTeam, awayTeam, onSave, onCancel }) => {
 
     return (
         <div className="space-y-6">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3">
-                <p className="text-sm font-semibold text-blue-800">
-                    Sport: {sport || 'General'}
-                </p>
-            </div>
-
             {renderScoreInput(homeTeam, homeScore, setHomeScore, `${homeTeam?.name || 'Home Team'}`)}
 
             <div className="border-t border-slate-200 pt-4">

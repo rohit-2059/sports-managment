@@ -28,6 +28,44 @@ const register = async (req, res, next) => {
       });
     }
 
+    // Email validation - must be valid format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        error: "Please provide a valid email address",
+      });
+    }
+
+    // Password validation - minimum 8 characters, at least one uppercase, one lowercase, one number
+    if (password.length < 8) {
+      return res.status(400).json({
+        success: false,
+        error: "Password must be at least 8 characters long",
+      });
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      return res.status(400).json({
+        success: false,
+        error: "Password must contain at least one uppercase letter",
+      });
+    }
+
+    if (!/[a-z]/.test(password)) {
+      return res.status(400).json({
+        success: false,
+        error: "Password must contain at least one lowercase letter",
+      });
+    }
+
+    if (!/[0-9]/.test(password)) {
+      return res.status(400).json({
+        success: false,
+        error: "Password must contain at least one number",
+      });
+    }
+
     // Check if role is valid
     const validRoles = ["super_admin", "coach", "player"];
     if (!validRoles.includes(role)) {

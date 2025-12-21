@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { API_BASE_URL } from '../../config/api';
+import SportScoreInput from './shared/SportScoreInput';
 
 // --- Icons ---
 const Icons = {
@@ -271,15 +272,11 @@ const MatchScheduler = ({ tournament, onClose }) => {
 
 const MatchCard = ({ match, onUpdate, onUpdateScore }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingScore, setIsEditingScore] = useState(false);
   const [editData, setEditData] = useState({
     scheduledDate: match.scheduledDate ? match.scheduledDate.split('T')[0] : '',
     scheduledTime: match.scheduledTime || '',
     venue: match.venue || '',
-  });
-  const [scoreData, setScoreData] = useState({
-    homeScore: match.homeTeamScore || 0,
-    awayScore: match.awayTeamScore || 0,
-    status: match.status === 'completed' ? 'completed' : 'completed',
   });
 
   const handleSave = () => {
@@ -287,9 +284,33 @@ const MatchCard = ({ match, onUpdate, onUpdateScore }) => {
     setIsEditing(false);
   };
 
-  const handleSaveScore = () => {
+  const handleSaveScore = (scoreDetails) => {
+    // Calculate total scores for simple sports
+    const homeScore = scoreDetails.homeTeam.goals !== undefined 
+      ? scoreDetails.homeTeam.goals 
+      : scoreDetails.homeTeam.points !== undefined 
+      ? scoreDetails.homeTeam.points 
+      : scoreDetails.homeTeam.runs !== undefined 
+      ? scoreDetails.homeTeam.runs 
+      : scoreDetails.homeTeam.score || 0;
+
+    const awayScore = scoreDetails.awayTeam.goals !== undefined 
+      ? scoreDetails.awayTeam.goals 
+      : scoreDetails.awayTeam.points !== undefined 
+      ? scoreDetails.awayTeam.points 
+      : scoreDetails.awayTeam.runs !== undefined 
+      ? scoreDetails.awayTeam.runs 
+      : scoreDetails.awayTeam.score || 0;
+
+    const scoreData = {
+      homeScore,
+      awayScore,
+      scoreDetails,
+      status: 'completed'
+    };
+    
     onUpdateScore(scoreData);
-    // setIsEditingScore(false); // Assuming we might want to close something, but logic was mixed in original
+    setIsEditingScore(false);
   };
 
   return (
@@ -351,7 +372,7 @@ const MatchCard = ({ match, onUpdate, onUpdateScore }) => {
                     </div>
                 </>
             ) : (
-                <div className="text-center py-2 text-slate-400 font-medium bg-slate-50 px-6 py-3 rounded-lg border border-dashed border-slate-200 w-full">
+                <div className="text-center text-slate-400 font-medium bg-slate-50 px-6 py-3 rounded-lg border border-dashed border-slate-200 w-full">
                     Waiting for teams to be determined
                 </div>
             )}
@@ -424,35 +445,23 @@ const MatchCard = ({ match, onUpdate, onUpdateScore }) => {
                             <Icons.Trophy className="w-4 h-4 mr-2 text-yellow-500" />
                             Update Result
                         </h5>
-                        <div className="flex items-center space-x-4 mb-4">
-                            <div className="flex-1">
-                                <label className="block text-xs font-medium text-slate-500 mb-1 truncate">{match.homeTeam.name}</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    value={scoreData.homeScore}
-                                    onChange={(e) => setScoreData({ ...scoreData, homeScore: parseInt(e.target.value) || 0 })}
-                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-center font-bold text-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                                />
-                            </div>
-                            <span className="text-slate-300 font-bold text-xl mt-4">:</span>
-                            <div className="flex-1">
-                                <label className="block text-xs font-medium text-slate-500 mb-1 truncate">{match.awayTeam.name}</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    value={scoreData.awayScore}
-                                    onChange={(e) => setScoreData({ ...scoreData, awayScore: parseInt(e.target.value) || 0 })}
-                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-center font-bold text-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                                />
-                            </div>
-                        </div>
-                        <button
-                            onClick={handleSaveScore}
-                            className="w-full bg-green-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
-                        >
-                            Update Score & Finish Match
-                        </button>
+                        
+                        {!isEditingScore ? (
+                            <button
+                                onClick={() => setIsEditingScore(true)}
+                                className="w-full bg-green-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                            >
+                                Update Score & Finish Match
+                            </button>
+                        ) : (
+                            <SportScoreInput
+                                sport={match.sport}
+                                homeTeam={match.homeTeam}
+                                awayTeam={match.awayTeam}
+                                onSave={handleSaveScore}
+                                onCancel={() => setIsEditingScore(false)}
+                            />
+                        )}
                     </div>
                 )}
             </div>

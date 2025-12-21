@@ -80,6 +80,7 @@ const SuperAdminDashboard = ({ user, onLogout }) => {
         fetchTeams();
         fetchUsers();
         fetchTournaments();
+        fetchAllMatches();
     }, []);
 
     const fetchTeams = async () => {
@@ -149,14 +150,19 @@ const SuperAdminDashboard = ({ user, onLogout }) => {
                 }
             }
 
-            allMatchesData.sort((a, b) => {
+            // Filter only incomplete matches (scheduled or live, not completed)
+            const incompleteMatches = allMatchesData.filter(match => 
+                match.status !== 'completed'
+            );
+
+            incompleteMatches.sort((a, b) => {
                 if (!a.scheduledDate) return 1;
                 if (!b.scheduledDate) return -1;
                 return new Date(a.scheduledDate) - new Date(b.scheduledDate);
             });
 
-            setAllMatches(allMatchesData);
-            setFilteredMatches(allMatchesData);
+            setAllMatches(incompleteMatches);
+            setFilteredMatches(incompleteMatches);
         } catch (err) {
             console.error('Error fetching matches:', err);
         }
@@ -190,7 +196,7 @@ const SuperAdminDashboard = ({ user, onLogout }) => {
                         { label: 'Total Users', value: users.length, icon: Icons.Users, color: 'blue', trend: '+12%' },
                         { label: 'Active Teams', value: teams.length, icon: Icons.Teams, color: 'indigo', trend: '+5%' },
                         { label: 'Tournaments', value: tournaments.length, icon: Icons.RealTrophy, color: 'purple', trend: 'Active' },
-                        { label: 'System Status', value: 'Online', icon: Icons.Chart, color: 'green', trend: 'Stable' },
+                        { label: 'Matches Scheduled', value: allMatches.length, icon: Icons.Calendar, color: 'green', trend: 'Total' },
                     ].map((stat, idx) => (
                         <div key={idx} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 group">
                             <div className="flex items-center justify-between mb-4">
@@ -644,12 +650,6 @@ const SuperAdminDashboard = ({ user, onLogout }) => {
 
                         {/* Right side of header */}
                         <div className="flex items-center gap-6">
-                            <div className="hidden md:flex items-center gap-4 text-sm text-slate-400">
-                                <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-800/50 rounded-full border border-slate-700/50">
-                                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                    <span>System Operational</span>
-                                </div>
-                            </div>
                             {activeView === 'dashboard' && (
                                 <>
                                     <div className="h-10 w-px bg-slate-700/50"></div>
