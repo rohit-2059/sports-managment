@@ -15,14 +15,7 @@ const defaultTestimonials = [
     imageSrc: avatar2,
     name: "Rohit Khandelwal",
     username: "@rohit_sports",
-    role: "High School Basketball Coach",
-  },
-  {
-    text: "Managing multiple teams was a nightmare before SportsPro. Now I can track everything easily and focus on what matters - coaching.",
-    imageSrc: avatar1,
-    name: "Ananya",
-    username: "@ananya_coach",
-    role: "Soccer Club Director",
+    role: "Cricket Player",
   },
   {
     text: "The tournament management feature is incredible. We ran our entire regional tournament smoothly with real-time updates.",
@@ -30,6 +23,13 @@ const defaultTestimonials = [
     name: "Anjali",
     username: "@anjali_sports",
     role: "Tournament Organizer",
+  },
+  {
+    text: "Managing multiple teams was a nightmare before SportsPro. Now I can track everything easily and focus on what matters - coaching.",
+    imageSrc: avatar1,
+    name: "Ananya",
+    username: "@ananya_coach",
+    role: "Soccer Club Director",
   },
   {
     text: "As a player, I love seeing my stats and knowing when practices are. My parents get updates too which is super convenient.",
