@@ -72,20 +72,20 @@ export default function ContactUs1() {
                   isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
                 }
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="flex w-full gap-2">
-                <h2 className="from-foreground to-foreground/80 mb-2 bg-gradient-to-r bg-clip-text text-4xl font-bold tracking-tight text-transparent md:text-5xl">
-                  Contact
+                className="relative mb-2 text-center">
+                <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
+                  Contact{" "}
+                  <span className="text-primary italic">
+                    Us
+                  </span>
                 </h2>
-                <span className="text-primary relative z-10 w-full text-4xl font-bold tracking-tight italic md:text-5xl">
-                 Contact Us
-                </span>
                 <SparklesCore
                   id="tsparticles"
                   background="transparent"
                   minSize={0.6}
                   maxSize={1.4}
                   particleDensity={500}
-                  className="absolute inset-0 top-0 h-24 w-full"
+                  className="absolute inset-0 -top-4 h-24 w-full"
                   particleColor="#3b82f6"
                 />
               </motion.div>
