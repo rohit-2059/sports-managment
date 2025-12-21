@@ -83,7 +83,7 @@ export default function DesignerPricing() {
             <div className="mb-8">
               <div className="mb-2 flex items-end gap-2">
                 <span className="text-4xl font-bold tracking-tight lg:text-5xl">
-                  $29
+                  Rs.250
                 </span>
                 <span className="mb-1 text-neutral-500">/month</span>
               </div>
@@ -231,7 +231,7 @@ export default function DesignerPricing() {
             <div className="mb-8">
               <div className="mb-2 flex items-end gap-2">
                 <span className="text-4xl font-bold tracking-tight lg:text-5xl">
-                  $99
+                  Rs.500
                 </span>
                 <span className="mb-1 text-neutral-400">/month</span>
               </div>

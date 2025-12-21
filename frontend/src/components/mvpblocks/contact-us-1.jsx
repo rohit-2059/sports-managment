@@ -77,7 +77,7 @@ export default function ContactUs1() {
                   Contact
                 </h2>
                 <span className="text-primary relative z-10 w-full text-4xl font-bold tracking-tight italic md:text-5xl">
-                  Us
+                 Contact Us
                 </span>
                 <SparklesCore
                   id="tsparticles"
