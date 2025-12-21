@@ -108,7 +108,7 @@ const Header = ({ onSwitchToLogin, onSwitchToRegister }) => {
                         <div className="flex items-center gap-3 flex-shrink-0">
                             <div className="flex items-center gap-2">
                                 <img 
-                                    src="/src/assets/sports.png" 
+                                    src="/sports.png" 
                                     alt="SportsPro" 
                                     className={`w-8 h-8 sm:w-9 sm:h-9 object-contain transition-all duration-500 ${
                                         isOnPricing ? '' : 'invert brightness-0 contrast-200'
