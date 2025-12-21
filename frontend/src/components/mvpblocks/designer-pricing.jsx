@@ -1,6 +1,13 @@
+import { useState } from "react";
 import { cn } from "../../lib/utils";
 
 export default function DesignerPricing() {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleButtonClick = () => {
+    setShowModal(true);
+  };
+
   return (
     <div id="pricing" className="relative min-h-full w-full bg-white font-sans text-black antialiased">
       <section className="relative mr-auto ml-auto max-w-7xl pt-16 pr-4 pb-16 pl-4 sm:px-6 sm:py-24 lg:px-8">
@@ -93,10 +100,10 @@ export default function DesignerPricing() {
             </div>
 
             <div className="mb-8 flex flex-col gap-3">
-              <button className="w-full rounded-full bg-red-500 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-red-600">
+              <button onClick={handleButtonClick} className="w-full rounded-full bg-red-500 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-red-600">
                 Start Managing
               </button>
-              <button className="w-full rounded-full border-2 border-black px-6 py-3 text-sm font-medium text-black transition-all duration-200 hover:bg-black hover:text-white">
+              <button onClick={handleButtonClick} className="w-full rounded-full border-2 border-black px-6 py-3 text-sm font-medium text-black transition-all duration-200 hover:bg-black hover:text-white">
                 Learn More
               </button>
             </div>
@@ -241,10 +248,10 @@ export default function DesignerPricing() {
             </div>
 
             <div className="mb-8 flex flex-col gap-3">
-              <button className="w-full rounded-full bg-white px-6 py-3 text-sm font-semibold text-black transition-all duration-200 hover:bg-neutral-100">
+              <button onClick={handleButtonClick} className="w-full rounded-full bg-white px-6 py-3 text-sm font-semibold text-black transition-all duration-200 hover:bg-neutral-100">
                 Upgrade to Pro
               </button>
-              <button className="w-full rounded-full border-2 border-white px-6 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-white hover:text-black">
+              <button onClick={handleButtonClick} className="w-full rounded-full border-2 border-white px-6 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-white hover:text-black">
                 Book Demo
               </button>
             </div>
@@ -408,10 +415,10 @@ export default function DesignerPricing() {
             </div>
 
             <div className="mb-8 flex flex-col gap-3">
-              <button className="w-full rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-neutral-800">
+              <button onClick={handleButtonClick} className="w-full rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-neutral-800">
                 Get Custom Quote
               </button>
-              <button className="w-full rounded-full border-2 border-black px-6 py-3 text-sm font-medium text-black transition-all duration-200 hover:bg-black hover:text-white">
+              <button onClick={handleButtonClick} className="w-full rounded-full border-2 border-black px-6 py-3 text-sm font-medium text-black transition-all duration-200 hover:bg-black hover:text-white">
                 Enterprise Demo
               </button>
             </div>
@@ -561,6 +568,47 @@ export default function DesignerPricing() {
           </div>
         </div>
       </section>
+
+      {/* Coming Soon Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={() => setShowModal(false)}>
+          <div className="relative mx-4 max-w-md rounded-3xl bg-gradient-to-br from-white to-gray-50 p-8 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            
+            <div className="text-center">
+              <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              
+              <h3 className="mb-2 text-2xl font-bold text-gray-900">Coming Soon!</h3>
+              <p className="mb-6 text-gray-600">
+                We're working hard to bring you our pricing plans. Stay tuned for exciting features and competitive rates!
+              </p>
+              
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="w-full rounded-full bg-gradient-to-r from-red-500 to-red-600 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:from-red-600 hover:to-red-700 hover:shadow-lg"
+                >
+                  Got it!
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
