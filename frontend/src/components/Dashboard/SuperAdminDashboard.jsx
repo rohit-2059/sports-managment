@@ -3,6 +3,7 @@ import TournamentManagement from './TournamentManagement';
 import MatchScheduler from './MatchScheduler';
 import { AnimatePresence, motion } from "framer-motion";
 import ProfileEditModal from './shared/ProfileEditModal';
+import { API_BASE_URL } from '../../config/api';
 
 // --- Icons ---
 const Icons = {
@@ -84,7 +85,7 @@ const SuperAdminDashboard = ({ user, onLogout }) => {
     const fetchTeams = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const response = await fetch('http://localhost:3001/api/teams', {
+            const response = await fetch(`${API_BASE_URL}/api/teams`, {
                 headers: { 'Authorization': `Bearer ${token}` },
             });
             const data = await response.json();
@@ -99,7 +100,7 @@ const SuperAdminDashboard = ({ user, onLogout }) => {
     const fetchUsers = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const response = await fetch('http://localhost:3001/api/auth/users', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/users`, {
                 headers: { 'Authorization': `Bearer ${token}` },
             });
             const data = await response.json();
@@ -112,7 +113,7 @@ const SuperAdminDashboard = ({ user, onLogout }) => {
     const fetchTournaments = async () => {
         try {
             const token = sessionStorage.getItem('token');
-            const response = await fetch('http://localhost:3001/api/tournaments', {
+            const response = await fetch(`${API_BASE_URL}/api/tournaments`, {
                 headers: { 'Authorization': `Bearer ${token}` },
             });
             const data = await response.json();
@@ -129,7 +130,7 @@ const SuperAdminDashboard = ({ user, onLogout }) => {
         try {
             const token = sessionStorage.getItem('token');
             const allMatchesData = [];
-            const tournamentsResponse = await fetch('http://localhost:3001/api/tournaments', {
+            const tournamentsResponse = await fetch(`${API_BASE_URL}/api/tournaments`, {
                 headers: { 'Authorization': `Bearer ${token}` },
             });
             const tournamentsData = await tournamentsResponse.json();
@@ -137,7 +138,7 @@ const SuperAdminDashboard = ({ user, onLogout }) => {
             if (tournamentsData.success) {
                 for (const tournament of tournamentsData.data) {
                     if (tournament.scheduleGenerated) {
-                        const matchesResponse = await fetch(`http://localhost:3001/api/matches/tournament/${tournament._id}`, {
+                        const matchesResponse = await fetch(`${API_BASE_URL}/api/matches/tournament/${tournament._id}`, {
                             headers: { 'Authorization': `Bearer ${token}` },
                         });
                         const matchesData = await matchesResponse.json();

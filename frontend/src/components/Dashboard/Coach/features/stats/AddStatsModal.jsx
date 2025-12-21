@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../../../../config/api';
 import { CloseIcon } from '../../utils/icons.jsx';
 
 const AddStatsModal = ({ isOpen, onClose, team, onStatsAdded, token }) => {
@@ -47,7 +48,7 @@ const AddStatsModal = ({ isOpen, onClose, team, onStatsAdded, token }) => {
                 season: new Date().getFullYear().toString()
             };
 
-            const response = await fetch(`http://localhost:3001/api/stats`, {
+            const response = await fetch(`${API_BASE_URL}/api/stats`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

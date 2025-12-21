@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_BASE_URL } from '../../../config/api';
 
 const CloseIcon = () => (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,7 +35,7 @@ const ProfileEditModal = ({ isOpen, onClose, user, token, onProfileUpdated }) =>
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:3001/api/auth/profile', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,7 +76,7 @@ const ProfileEditModal = ({ isOpen, onClose, user, token, onProfileUpdated }) =>
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:3001/api/auth/change-password', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

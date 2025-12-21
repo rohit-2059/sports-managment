@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { API_BASE_URL } from '../../config/api';
 
 // --- Icons ---
 const Icons = {
@@ -54,7 +55,7 @@ const MatchScheduler = ({ tournament, onClose }) => {
     try {
       setLoading(true);
       const token = sessionStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/api/matches/tournament/${tournament._id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/matches/tournament/${tournament._id}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       const data = await response.json();
@@ -81,7 +82,7 @@ const MatchScheduler = ({ tournament, onClose }) => {
     try {
       setGenerating(true);
       const token = sessionStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/api/matches/tournament/${tournament._id}/generate-schedule`, {
+      const response = await fetch(`${API_BASE_URL}/api/matches/tournament/${tournament._id}/generate-schedule`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
       });
@@ -106,7 +107,7 @@ const MatchScheduler = ({ tournament, onClose }) => {
   const handleUpdateMatch = async (matchId, updates) => {
     try {
       const token = sessionStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/api/matches/${matchId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/matches/${matchId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -130,7 +131,7 @@ const MatchScheduler = ({ tournament, onClose }) => {
   const handleUpdateScore = async (matchId, scoreData) => {
     try {
       const token = sessionStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/api/matches/${matchId}/score`, {
+      const response = await fetch(`${API_BASE_URL}/api/matches/${matchId}/score`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

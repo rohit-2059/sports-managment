@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../config/api';
 
 // Components
 import Header from './Coach/components/Header';
@@ -64,7 +65,7 @@ const CoachDashboard = ({ user, onLogout }) => {
 
   const fetchTeams = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/teams', {
+      const response = await fetch(`${API_BASE_URL}/api/teams`, {
         headers: { 'Authorization': `Bearer ${getToken()}` },
       });
       const data = await response.json();
@@ -87,7 +88,7 @@ const CoachDashboard = ({ user, onLogout }) => {
 
   const fetchAvailablePlayers = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/auth/users', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/users`, {
         headers: { 'Authorization': `Bearer ${getToken()}` },
       });
       const data = await response.json();
@@ -108,7 +109,7 @@ const CoachDashboard = ({ user, onLogout }) => {
 
       // Fetch matches for each team
       for (const team of teams) {
-        const response = await fetch(`http://localhost:3001/api/matches/team/${team._id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/matches/team/${team._id}`, {
           headers: { 'Authorization': `Bearer ${getToken()}` },
         });
         const data = await response.json();
@@ -137,7 +138,7 @@ const CoachDashboard = ({ user, onLogout }) => {
   const fetchTeamPlayersStats = async (teamId) => {
     setStatsLoading(true);
     try {
-      const response = await fetch(`http://localhost:3001/api/stats/team/${teamId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/stats/team/${teamId}`, {
         headers: { 'Authorization': `Bearer ${getToken()}` },
       });
       const data = await response.json();
@@ -158,7 +159,7 @@ const CoachDashboard = ({ user, onLogout }) => {
     if (!confirm('Are you sure you want to remove this player?')) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/teams/${selectedTeam._id}/players/${playerId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/teams/${selectedTeam._id}/players/${playerId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${getToken()}` },
       });

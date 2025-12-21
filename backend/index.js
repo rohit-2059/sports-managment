@@ -20,9 +20,24 @@ const app = express();
 connectDB();
 
 // Middleware
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  process.env.FRONTEND_URL, // Add your Vercel URL here
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: true, // Allow all origins during development
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   })
 );
@@ -65,6 +80,11 @@ app.use("/api/contact", contactRoutes);
 
 // Error Handler (must be last)
 app.use(errorHandler);
+
+// Health check endpoint for Render
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'Server is healthy' });
+});
 
 // Handle unhandled promise rejections
 process.on("unhandledRejection", (err, promise) => {

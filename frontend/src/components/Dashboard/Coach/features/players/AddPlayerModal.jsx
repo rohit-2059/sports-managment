@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../../../../config/api';
 import { CloseIcon, ICONS } from '../../utils/icons.jsx';
 
 const AddPlayerModal = ({ isOpen, onClose, teams, selectedTeam, onPlayerAdded, token }) => {
@@ -34,7 +35,7 @@ const AddPlayerModal = ({ isOpen, onClose, teams, selectedTeam, onPlayerAdded, t
 
         const fetchPlayers = async () => {
             try {
-                const res = await fetch(`http://localhost:3001/api/auth/players`, {
+                const res = await fetch(`${API_BASE_URL}/api/auth/players`, {
                     headers: { Authorization: `Bearer ${token}` },
                     signal: controller.signal,
                 });
@@ -86,7 +87,7 @@ const AddPlayerModal = ({ isOpen, onClose, teams, selectedTeam, onPlayerAdded, t
                 };
             }
 
-            const response = await fetch(`http://localhost:3001/api/teams/${formData.teamId}/players`, {
+            const response = await fetch(`${API_BASE_URL}/api/teams/${formData.teamId}/players`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

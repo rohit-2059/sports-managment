@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { API_BASE_URL } from '../../config/api';
 import Header from "./Player/components/Header";
 import NavigationTabs from "./Player/components/NavigationTabs";
 import ProfileView from "./Player/features/profile/ProfileView";
@@ -47,7 +48,7 @@ const PlayerDashboard = ({ user, onLogout }) => {
       setLoading(true);
       const token = sessionStorage.getItem("token");
 
-      const response = await fetch("http://localhost:3001/api/teams", {
+      const response = await fetch(`${API_BASE_URL}/api/teams`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -80,7 +81,7 @@ const PlayerDashboard = ({ user, onLogout }) => {
     setMatchesLoading(true);
     try {
       const token = sessionStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/api/matches/team/${team._id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/matches/team/${team._id}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       const data = await response.json();
@@ -105,13 +106,13 @@ const PlayerDashboard = ({ user, onLogout }) => {
       const token = sessionStorage.getItem('token');
 
       // Fetch individual stats
-      const statsResponse = await fetch(`http://localhost:3001/api/stats/player/${user.id}`, {
+      const statsResponse = await fetch(`${API_BASE_URL}/api/stats/player/${user.id}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       const statsData = await statsResponse.json();
 
       // Fetch aggregated stats
-      const aggResponse = await fetch(`http://localhost:3001/api/stats/player/${user.id}/aggregated`, {
+      const aggResponse = await fetch(`${API_BASE_URL}/api/stats/player/${user.id}/aggregated`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       const aggData = await aggResponse.json();
@@ -133,7 +134,7 @@ const PlayerDashboard = ({ user, onLogout }) => {
   const handleLeaveTeam = async () => {
     try {
       const token = sessionStorage.getItem("token");
-      const response = await fetch("http://localhost:3001/api/teams/leave", {
+      const response = await fetch(`${API_BASE_URL}/api/teams/leave`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

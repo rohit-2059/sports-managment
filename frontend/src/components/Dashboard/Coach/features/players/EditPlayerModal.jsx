@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../../../../config/api';
 import { CloseIcon } from '../../utils/icons.jsx';
 
 const EditPlayerModal = ({ isOpen, onClose, player, teamId, onPlayerUpdated, token }) => {
@@ -28,7 +29,7 @@ const EditPlayerModal = ({ isOpen, onClose, player, teamId, onPlayerUpdated, tok
 
         try {
             const playerId = player.playerId?._id || player._id;
-            const response = await fetch(`http://localhost:3001/api/teams/${teamId}/players/${playerId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/teams/${teamId}/players/${playerId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

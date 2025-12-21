@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../config/api';
 import MatchScheduler from './MatchScheduler';
 
 // --- Icons ---
@@ -83,7 +84,7 @@ const TournamentManagement = () => {
   const fetchTournaments = async () => {
     try {
       const token = sessionStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/tournaments', {
+      const response = await fetch(`${API_BASE_URL}/api/tournaments`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -105,7 +106,7 @@ const TournamentManagement = () => {
     try {
       const token = sessionStorage.getItem('token');
       const capitalizedSport = sport.charAt(0).toUpperCase() + sport.slice(1).toLowerCase();
-      const response = await fetch(`http://localhost:3001/api/teams?sport=${capitalizedSport}&limit=100`, {
+      const response = await fetch(`${API_BASE_URL}/api/teams?sport=${capitalizedSport}&limit=100`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -172,7 +173,7 @@ const TournamentManagement = () => {
         teams: selectedTeams,
         status: 'upcoming'
       };
-      const response = await fetch('http://localhost:3001/api/tournaments', {
+      const response = await fetch(`${API_BASE_URL}/api/tournaments`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -218,7 +219,7 @@ const TournamentManagement = () => {
         ...formData,
         teams: selectedTeams
       };
-      const response = await fetch(`http://localhost:3001/api/tournaments/${editingTournament._id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/tournaments/${editingTournament._id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -248,7 +249,7 @@ const TournamentManagement = () => {
     }
     try {
       const token = sessionStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/api/tournaments/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/tournaments/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
