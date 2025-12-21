@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { API_BASE_URL } from '../../config/api';
-import sportsLogo from '../../assets/sports.png';
 
 const Register = ({ onSuccess, onSwitchToLogin, onBackToLanding }) => {
   const [formData, setFormData] = useState({
@@ -106,7 +105,7 @@ const Register = ({ onSuccess, onSwitchToLogin, onBackToLanding }) => {
         <div className="w-full lg:w-1/2 h-full flex flex-col justify-center">
           <div className="max-w-md mx-auto w-full">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <img src={sportsLogo} alt="SportsPro" className="h-14 w-auto" />
+              <img src="/sports.png" alt="SportsPro" className="h-14 w-auto" />
               <span className="text-2xl font-bold text-gray-900">SportsPro</span>
             </div>
             
